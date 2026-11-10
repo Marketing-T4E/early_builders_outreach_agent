@@ -27,6 +27,10 @@ if (localDev && String(process.env.BASE_PATH || '').trim()) {
   process.exit(1);
 }
 const HOST = localDev ? '127.0.0.1' : undefined;
+if (auth.openMode()) {
+  console.warn('AVISO: AUTH_MODE=open. El servicio está SIN LOGIN (fase de QA): cualquiera con el enlace entra. '
+    + 'Quita AUTH_MODE y define AZURE_* en cuanto exista la app de Microsoft.');
+}
 
 // Diagnóstico seguro al arrancar: solo nombres de variables, nunca sus valores.
 const OPTIONAL = {
@@ -74,7 +78,7 @@ app.use((err, req, res, next) => {
     console.warn('Sin base de datos: la cola y la corrida diaria no funcionan (solo pruebas locales).');
   }
   app.listen(PORT, HOST, () => {
-    console.log(`Agente de escucha en el puerto ${PORT}${localDev ? ' (local-dev, solo 127.0.0.1)' : ''}`);
+    console.log(`Agente de escucha en el puerto ${PORT}${localDev ? ' (local-dev, solo 127.0.0.1)' : auth.openMode() ? ' (SIN LOGIN: AUTH_MODE=open)' : ''}`);
     if (hasDb()) startScheduler();
   });
 })().catch((e) => {

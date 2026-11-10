@@ -77,6 +77,12 @@ Adaptado de `latam_growth/lib/msauth.js`:
 - **Usuarios:** quedan en la tabla `users`. Para quitarle el acceso a alguien sin borrarlo: `UPDATE users SET status = 'disabled' WHERE email = '...'`.
 - **Callback:** `AUTH_REDIRECT_URI` debe ser la URL pública que termina en `/auth/microsoft/callback`, la misma ruta del tablero. También se acepta `/auth/callback`, y la URI tiene que estar registrada en la app de Entra.
 - **Sin configuración:** el servicio no arranca. Para probar en tu máquina, usa `AUTH_MODE=local-dev`, que solo escucha en 127.0.0.1.
+- **Fase de QA sin login (temporal):** `AUTH_MODE=open` deja entrar al servicio sin Microsoft mientras el equipo responsable entrega la app de OAuth.
+  - Cualquiera con el enlace entra, y todas las acciones quedan a nombre de `OPEN_MODE_USER` (por defecto `qa@think4ever.com`).
+  - La interfaz muestra "Sin login (QA)" y el registro lo avisa al arrancar.
+  - Como hay un solo usuario, pon también `REQUIRE_DISTINCT_APPROVER=0`; si no, nadie puede aprobar lo que editó.
+  - Esto va en contra de la regla de T4E de que toda herramienta interna pide autenticación. Úsalo solo en QA y no compartas el enlace fuera del equipo.
+  - Para volver al login, quita `AUTH_MODE` y define las variables `AZURE_*` y `SESSION_SECRET`. El código de Microsoft no se tocó.
 - **Diagnóstico al arrancar:** el registro muestra qué variables faltan, solo por nombre y nunca con su valor. Si a Reddit o a GitHub les faltan credenciales, se omiten y la corrida sigue con las demás.
 
 ## Configuración editable sin tocar código

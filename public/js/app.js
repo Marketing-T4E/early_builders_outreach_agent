@@ -24,6 +24,10 @@
     document.getElementById('user-role').textContent = `Publicadas hoy ${S.me.postsToday}/${S.me.maxPostsPerDay}`;
     document.getElementById('links-foot').textContent = S.me.linksEnabled ? 'Enlaces activos' : 'Fase sin enlaces';
     document.getElementById('links-dot').style.background = S.me.linksEnabled ? '' : 'var(--color-warning)';
+    // Fase de QA sin login: no hay sesión que cerrar y todo queda a nombre de un único usuario.
+    const open = S.me.authMode === 'open';
+    document.getElementById('open-badge').hidden = !open;
+    document.getElementById('logout-btn').hidden = open;
   };
 
   // ---------- contadores del menú

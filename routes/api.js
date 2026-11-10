@@ -6,6 +6,7 @@ const { settings } = require('../lib/settings');
 const { runScan, isRunning } = require('../lib/scan');
 const { buildReport } = require('../lib/report');
 const { bogotaNow } = require('../lib/scheduler');
+const { authMode } = require('../lib/auth');
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.get('/api/me', wrap(async (req, res) => {
     maxPostsPerDay: cfg.maxPostsPerPersonPerDay,
     linksEnabled: cfg.linksEnabled,
     requireDistinctApprover: cfg.requireDistinctApprover,
+    authMode: authMode(),
   });
 }));
 

@@ -88,3 +88,32 @@ test('reporte en Markdown', () => {
   assert.match(md, /Tutorial X/);
   assert.match(md, /reddit · ClaudeAI/);
 });
+
+test('acceso: AUTH_MODE=open (QA) entra sin login con un único usuario; sin él, pide sesión', () => {
+  const { requireAuth, missingAuthSettings, authMode } = require('../lib/auth');
+  const saved = { mode: process.env.AUTH_MODE, user: process.env.OPEN_MODE_USER };
+  const call = (path) => {
+    const req = { path, session: null }, out = {};
+    const res = { status(c) { out.status = c; return this; }, json(b) { out.body = b; return this; }, redirect(u) { out.redirect = u; } };
+    requireAuth(req, res, () => { out.next = true; });
+    return { req, out };
+  };
+  try {
+    process.env.AUTH_MODE = 'open';
+    process.env.OPEN_MODE_USER = 'QA.Team@think4ever.com';
+    assert.equal(authMode(), 'open');
+    assert.deepEqual(missingAuthSettings(), []);
+    const { req, out } = call('/api/queue');
+    assert.equal(out.next, true);
+    assert.equal(req.user.email, 'qa.team@think4ever.com');
+
+    delete process.env.AUTH_MODE;
+    assert.equal(authMode(), 'microsoft');
+    assert.equal(call('/api/queue').out.status, 401);
+    assert.match(call('/').out.redirect, /login\.html$/);
+  } finally {
+    for (const [k, v] of [['AUTH_MODE', saved.mode], ['OPEN_MODE_USER', saved.user]]) {
+      if (v === undefined) delete process.env[k]; else process.env[k] = v;
+    }
+  }
+});
