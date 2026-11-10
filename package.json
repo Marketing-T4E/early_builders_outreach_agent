@@ -1,0 +1,33 @@
+{
+  "name": "early-builders-outreach-agent",
+  "version": "0.1.0",
+  "description": "Agente de escucha de Think4Ever: encuentra hilos en Reddit, Hacker News y GitHub Discussions, redacta la respuesta y la deja en cola. Publica una persona.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "prestart": "npm install --no-audit --no-fund",
+    "start": "node server.js",
+    "migrate": "node scripts/migrate.js",
+    "scan": "node scripts/scan.js",
+    "scan:dry": "node scripts/scan.js --dry-run",
+    "report": "node scripts/report.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0",
+    "@azure/msal-node": "^7.2.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.24.6"
+  },
+  "overrides": {
+    "express-mysql-session": {
+      "mysql2": "$mysql2"
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

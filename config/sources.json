@@ -1,0 +1,202 @@
+{
+  "_nota": "Lista inicial. POR CONFIRMAR contra los 24 subreddits mapeados por Research (plan de alcance, 2026-11-05). Se edita aquí, sin tocar código.",
+  "reddit": {
+    "subreddits": [
+      "ClaudeAI",
+      "ClaudeCode",
+      "cursor",
+      "ChatGPTCoding",
+      "vibecoding",
+      "mcp",
+      "LLMDevs",
+      "AI_Agents",
+      "lovable",
+      "replit",
+      "SoftwareEngineering",
+      "ExperiencedDevs",
+      "webdev",
+      "programacion",
+      "devsarg"
+    ],
+    "search_phrases": [
+      "claude code loses context",
+      "AI generated code production ready",
+      "vibe coded app security",
+      "keep documentation in sync AI",
+      "MCP server project context",
+      "código generado por IA producción"
+    ],
+    "no_self_promo": [
+      "ExperiencedDevs",
+      "SoftwareEngineering",
+      "webdev"
+    ]
+  },
+  "hn": {
+    "queries": [
+      "AI coding context",
+      "Claude Code",
+      "vibe coding production",
+      "AI generated code security",
+      "MCP server",
+      "living documentation",
+      "spec driven development"
+    ]
+  },
+  "github": {
+    "queries": [
+      "claude code context",
+      "MCP server context",
+      "AI generated code production",
+      "keep architecture docs in sync"
+    ],
+    "repos": []
+  },
+  "prefilter": {
+    "min_score": 5,
+    "question_signals": [
+      "?",
+      "how do",
+      "how can",
+      "how to",
+      "any tool",
+      "any way",
+      "anyone",
+      "does anyone",
+      "recommend",
+      "best way",
+      "looking for",
+      "struggling",
+      "help",
+      "cómo",
+      "como hago",
+      "alguien",
+      "recomiendan",
+      "alguna herramienta",
+      "qué usan",
+      "que usan",
+      "ayuda",
+      "busco"
+    ],
+    "topics": {
+      "contexto_entre_sesiones": {
+        "weight": 3,
+        "terms": [
+          "loses context",
+          "lose context",
+          "losing context",
+          "forgets",
+          "context window",
+          "every session",
+          "new session",
+          "re-explain",
+          "claude.md",
+          "agents.md",
+          "memory bank",
+          "pierde el contexto",
+          "olvida",
+          "cada sesión",
+          "contexto del proyecto",
+          "manage context",
+          "managing context",
+          "context management",
+          "context across",
+          "agent context",
+          "agents' context",
+          "project context",
+          "manejar el contexto",
+          "contexto entre sesiones"
+        ]
+      },
+      "prototipo_a_produccion": {
+        "weight": 3,
+        "terms": [
+          "production ready",
+          "production-ready",
+          "to production",
+          "ship to prod",
+          "vibe coded",
+          "vibe-coded",
+          "vibecoded",
+          "mvp to production",
+          "a producción",
+          "listo para producción"
+        ]
+      },
+      "hardening": {
+        "weight": 3,
+        "terms": [
+          "security review",
+          "security audit",
+          "harden",
+          "hardening",
+          "vulnerabilities",
+          "is it secure",
+          "secrets exposed",
+          "observability",
+          "auditoría de seguridad",
+          "vulnerabilidades",
+          "seguridad del código"
+        ]
+      },
+      "codigo_que_nadie_entiende": {
+        "weight": 2,
+        "terms": [
+          "nobody understands",
+          "don't understand the code",
+          "dont understand the code",
+          "ai generated code",
+          "ai-generated code",
+          "spaghetti",
+          "technical debt",
+          "tech debt",
+          "legacy code",
+          "inherited codebase",
+          "código que nadie entiende",
+          "código generado por ia",
+          "deuda técnica",
+          "código heredado"
+        ]
+      },
+      "documentacion_viva": {
+        "weight": 2,
+        "terms": [
+          "out of date docs",
+          "outdated documentation",
+          "docs in sync",
+          "living documentation",
+          "architecture diagram",
+          "single source of truth",
+          "spec-driven",
+          "spec driven",
+          "documentación desactualizada",
+          "documentar",
+          "diagrama de arquitectura"
+        ]
+      },
+      "mcp_contexto": {
+        "weight": 1,
+        "terms": [
+          "mcp server",
+          "model context protocol",
+          "mcp",
+          "servidor mcp"
+        ]
+      }
+    },
+    "exclude_terms": [
+      "[hiring]",
+      "[for hire]",
+      "we're hiring",
+      "job offer",
+      "salary",
+      "meme",
+      "oferta de empleo",
+      "vacante",
+      "who is hiring",
+      "who wants to be hired",
+      "freelancer? seeking freelancer",
+      "what are you working on"
+    ]
+  }
+}
