@@ -87,6 +87,22 @@ Adaptado de `latam_growth/lib/msauth.js`:
 - subreddits donde no se menciona la marca (`no_self_promo`); ahí la respuesta es solo ayuda;
 - temas, pesos, señales de pregunta, exclusiones y puntaje mínimo del filtro.
 
+## Interfaz
+
+Usa el mismo sistema de diseño del tablero LATAM Growth (`latam_growth/public/css/app.css`): menú lateral, barra superior, tema claro y oscuro. Es JavaScript sin compilar, con un módulo por vista (`public/js/views/`) y un router por hash.
+
+| Vista | Qué muestra |
+|---|---|
+| Resumen | Cuántos hilos hay en cada estado, tus publicaciones de hoy contra el tope, la última corrida y las reglas activas |
+| En cola, Aprobados, Publicados | La lista a la izquierda y el detalle a la derecha: pregunta, extracto, riesgos, borrador, revisión automática, acciones y registro |
+| Descartados, No relevantes, Errores | El archivo, con el motivo o el error de cada hilo |
+| Corridas | Las últimas 10 búsquedas: leídos, los que pasan el filtro, nuevos, borradores y errores |
+| Reporte | El reporte en Markdown de 7, 14, 30 o 90 días, para copiar o descargar |
+
+- Los botones que el servidor rechazaría aparecen desactivados y dicen por qué. Por ejemplo, Aprobar se desactiva si la revisión automática tiene errores o si tú editaste el borrador. El servidor sigue aplicando las reglas.
+- Antes de salir de un borrador con cambios sin guardar, la interfaz pide confirmación.
+- `css/app.css` es la única ruta abierta sin sesión además de `login.html`, porque la usa la página de acceso. No trae datos.
+
 ## Datos
 
 - Se guarda la URL, el título y un extracto del hilo público. **No se guarda el autor** ni ningún dato personal.
