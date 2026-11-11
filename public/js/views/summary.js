@@ -15,7 +15,7 @@
     if (running) return `${U.icon('spinner', 'fa-solid', 'fa-spin')} Hay una corrida en curso.`;
     if (!r) return 'Todavía no hay corridas.';
     const errs = (r.errors || []).length;
-    return `${esc(U.when(r.started_at))} · ${esc(r.trigger_by)} · ${U.fmt(r.fetched)} leídos, ${U.fmt(r.new_threads)} nuevos, ${U.fmt(r.drafted)} borradores${errs ? ` · <span style="color:var(--color-warning)">${errs} con error</span>` : ''}${r.finished_at ? '' : ' · sin terminar'}`;
+    return `${esc(U.when(r.started_at))} · ${esc(r.trigger_by)} · ${U.fmt(r.fetched)} leídos, ${U.fmt(r.new_threads)} nuevos, ${U.fmt(r.drafted)} revisados por Claude${errs ? ` · <span style="color:var(--color-warning)">${errs} con error</span>` : ''}${r.finished_at ? '' : ' · sin terminar'}`;
   };
 
   A.views.resumen = {
