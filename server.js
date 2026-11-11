@@ -26,6 +26,11 @@ for (const [what, names] of Object.entries(OPTIONAL)) {
   const missing = names.filter((n) => !String(process.env[n] || '').trim());
   if (missing.length) console.warn(`${what}: faltan ${missing.join(', ')}`);
 }
+// Solo Anthropic (lib/drafter.js): avisa si alguien intenta cambiar el destino o el modelo.
+for (const k of ['ANTHROPIC_BASE_URL', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_PROFILE']) {
+  if (String(process.env[k] || '').trim()) console.warn(`${k} está definido y se ignora: las llamadas van siempre a la API de Anthropic.`);
+}
+try { require('./lib/drafter').model(); } catch (e) { console.error(`${e.message}. Las corridas no redactarán hasta corregirlo.`); }
 
 const app = express();
 app.disable('x-powered-by');

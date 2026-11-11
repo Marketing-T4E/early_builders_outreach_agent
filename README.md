@@ -63,7 +63,7 @@ Las variables están en `.env.example`, con los mismos nombres que el tablero do
 
 | Variable | Para qué |
 |---|---|
-| `ANTHROPIC_API_KEY` | Clasificar y redactar |
+| `ANTHROPIC_API_KEY` | Clasificar y redactar. Solo se usa Anthropic: la dirección de la API va fija en el código (se ignora `ANTHROPIC_BASE_URL`) y `ANTHROPIC_MODEL` solo acepta modelos Claude |
 | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USER_AGENT` | App tipo *script* de la cuenta de la marca (u/IMT4E), solo lectura. Requiere aprobación de Reddit |
 | `GITHUB_TOKEN` | Token *fine-grained* con "Public repositories (read-only)" |
 
