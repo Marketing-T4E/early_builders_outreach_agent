@@ -9,12 +9,12 @@
     aprobado: { title: 'Aprobados', sub: 'Listos para publicar. Copia la respuesta, publícala desde tu propia cuenta y registra la URL.', empty: 'No hay respuestas aprobadas.' },
     publicado: { title: 'Publicados', sub: 'Respuestas publicadas, con la persona y la URL.', empty: 'Aún no hay respuestas publicadas.' },
     descartado: { title: 'Descartados', sub: 'Hilos que una persona descartó, con el motivo.', empty: 'No hay hilos descartados.' },
-    no_relevante: { title: 'No relevantes', sub: 'Hilos que pasaron el filtro previo pero Claude marcó como no relevantes. Sirven para afinar el filtro.', empty: 'No hay hilos en este estado.' },
+    no_relevante: { title: 'No relevantes', sub: 'Hilos que pasaron el filtro previo pero el agente marcó como no relevantes. Sirven para afinar el filtro.', empty: 'No hay hilos en este estado.' },
     error: { title: 'Errores', sub: 'Hilos que fallaron al clasificar o redactar. El motivo está en el detalle.', empty: 'Sin errores.' },
   };
   const STATUS_PILL = { en_cola: ['info', 'En cola'], aprobado: ['success', 'Aprobado'], publicado: ['success', 'Publicado'], descartado: ['neutral', 'Descartado'], no_relevante: ['neutral', 'No relevante'], error: ['error', 'Error'], pendiente: ['warning', 'Pendiente'] };
   const POSTED_HOSTS = { reddit: /(^|\.)reddit\.com$/, hn: /^news\.ycombinator\.com$/, github: /^github\.com$/ };
-  const ACTIONS = { redactado: 'Claude redactó el borrador', editado: 'editó el borrador', aprobado: 'aprobó', publicado: 'registró la publicación', descartado: 'descartó', error: 'error del agente' };
+  const ACTIONS = { redactado: 'El agente redactó el borrador', editado: 'editó el borrador', aprobado: 'aprobó', publicado: 'registró la publicación', descartado: 'descartó', error: 'error del agente' };
 
   const Q = { status: 'en_cola', items: null, sel: null, detail: null, detailLoading: false, error: '', draft: null };
   const editable = (t) => t && ['en_cola', 'aprobado'].includes(t.status);
@@ -138,7 +138,7 @@
       ${t.risks && t.risks.length ? `<div class="block callout callout-warning">${U.icon('triangle-exclamation')}<div><b>Riesgos</b><ul>${t.risks.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div></div>` : ''}
       ${t.reply != null || canEdit ? `
       <div class="block">
-        <div class="block-label">Borrador <small>${t.edited_by ? `editado por ${esc(t.edited_by)} · ${esc(U.when(t.edited_at))}` : 'sin editar (Claude)'} · <span class="char-count" id="char-count">${reply.length}</span> caracteres</small></div>
+        <div class="block-label">Borrador <small>${t.edited_by ? `editado por ${esc(t.edited_by)} · ${esc(U.when(t.edited_at))}` : 'sin editar (borrador del agente)'} · <span class="char-count" id="char-count">${reply.length}</span> caracteres</small></div>
         <textarea class="reply-box" id="reply" aria-label="Borrador de respuesta" ${canEdit ? '' : 'readonly'}>${esc(reply)}</textarea>
       </div>
       <div class="block"><div class="block-label">Revisión automática</div>${lintBlock(t)}</div>` : ''}

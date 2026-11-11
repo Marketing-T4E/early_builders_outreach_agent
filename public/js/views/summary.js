@@ -15,7 +15,7 @@
     if (running) return `${U.icon('spinner', 'fa-solid', 'fa-spin')} Hay una corrida en curso.`;
     if (!r) return 'Todavía no hay corridas.';
     const errs = (r.errors || []).length;
-    return `${esc(U.when(r.started_at))} · ${esc(r.trigger_by)} · ${U.fmt(r.fetched)} leídos, ${U.fmt(r.new_threads)} nuevos, ${U.fmt(r.drafted)} revisados por Claude${errs ? ` · <span style="color:var(--color-warning)">${errs} con error</span>` : ''}${r.finished_at ? '' : ' · sin terminar'}`;
+    return `${esc(U.when(r.started_at))} · ${esc(r.trigger_by)} · ${U.fmt(r.fetched)} leídos, ${U.fmt(r.new_threads)} nuevos, ${U.fmt(r.drafted)} revisados por el agente${errs ? ` · <span style="color:var(--color-warning)">${errs} con error</span>` : ''}${r.finished_at ? '' : ' · sin terminar'}`;
   };
 
   A.views.resumen = {
@@ -53,7 +53,7 @@
           body: U.kpiRow([
             U.kpi({ label: 'Descartados', value: n('descartado'), small: true, go: 'descartado' }),
             U.kpi({ label: 'No relevantes', value: n('no_relevante'), small: true, go: 'no_relevante' }),
-            U.kpi({ label: 'Pendientes de Claude', value: n('pendiente'), small: true, compare: 'Pasaron el filtro; se redactan en la próxima corrida' }),
+            U.kpi({ label: 'Pendientes del agente', value: n('pendiente'), small: true, compare: 'Pasaron el filtro; se redactan en la próxima corrida' }),
             U.kpi({ label: 'Errores', value: n('error'), small: true, go: 'error' }),
           ], 4),
         })}`;

@@ -34,12 +34,12 @@
           { t: 'Leídos', num: 1, f: (r) => U.fmt(r.fetched) },
           { t: 'Pasan filtro', num: 1, f: (r) => U.fmt(r.candidates) },
           { t: 'Nuevos', num: 1, f: (r) => U.fmt(r.new_threads) },
-          { t: 'Revisados por Claude', num: 1, f: (r) => U.fmt(r.drafted) },
+          { t: 'Revisados por el agente', num: 1, f: (r) => U.fmt(r.drafted) },
           { t: 'Errores', f: errors },
         ], R.runs);
       return U.card({
         title: 'Últimas corridas',
-        sub: R.running ? `${U.icon('spinner', 'fa-solid', 'fa-spin')} Hay una corrida en curso. Toma unos minutos.` : 'Leídos: todo lo que trajeron las fuentes. Pasan filtro: lo que llega a Claude. Nuevos: hilos que no estaban. Revisados por Claude: hilos que Claude clasificó; solo los relevantes (puntaje ≥ MIN_RELEVANCE) pasan a En cola, el resto a No relevantes.',
+        sub: R.running ? `${U.icon('spinner', 'fa-solid', 'fa-spin')} Hay una corrida en curso. Toma unos minutos.` : 'Leídos: todo lo que trajeron las fuentes. Pasan filtro: lo que llega al agente. Nuevos: hilos que no estaban. Revisados por el agente: hilos que el agente clasificó; solo los relevantes (puntaje ≥ MIN_RELEVANCE) pasan a En cola, el resto a No relevantes.',
         right: `<button type="button" class="btn btn-secondary btn-sm" id="runs-refresh">${U.icon('arrows-rotate')}Actualizar</button>`,
         body,
       });
