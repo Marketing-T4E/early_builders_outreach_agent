@@ -63,26 +63,18 @@ Las variables están en `.env.example`, con los mismos nombres que el tablero do
 
 | Variable | Para qué |
 |---|---|
-| `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AUTH_REDIRECT_URI`, `SESSION_SECRET` | Acceso con cuenta de Microsoft de think4ever (mismas variables que el tablero) |
 | `ANTHROPIC_API_KEY` | Clasificar y redactar |
 | `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USER_AGENT` | App tipo *script* de la cuenta de la marca (u/IMT4E), solo lectura. Requiere aprobación de Reddit |
 | `GITHUB_TOKEN` | Token *fine-grained* con "Public repositories (read-only)" |
 
 ### Acceso
 
-Adaptado de `latam_growth/lib/msauth.js`:
+**Sin login por ahora (fase de QA, desde 2026-11-10).** El inicio de sesión con Microsoft y sus variables se quitaron hasta nuevo aviso, mientras el equipo responsable entrega la app de OAuth.
 
-- **Login:** Microsoft (Entra ID) con PKCE, solo para el tenant de think4ever y cuentas `@think4ever.com`. Rechaza a los invitados de otras organizaciones.
-- **Sesiones:** se guardan en MySQL (tabla `sessions`). La cookie se limita al prefijo público de la app.
-- **Usuarios:** quedan en la tabla `users`. Para quitarle el acceso a alguien sin borrarlo: `UPDATE users SET status = 'disabled' WHERE email = '...'`.
-- **Callback:** `AUTH_REDIRECT_URI` debe ser la URL pública que termina en `/auth/microsoft/callback`, la misma ruta del tablero. También se acepta `/auth/callback`, y la URI tiene que estar registrada en la app de Entra.
-- **Sin configuración:** el servicio no arranca. Para probar en tu máquina, usa `AUTH_MODE=local-dev`, que solo escucha en 127.0.0.1.
-- **Fase de QA sin login (temporal):** `AUTH_MODE=open` deja entrar al servicio sin Microsoft mientras el equipo responsable entrega la app de OAuth.
-  - Cualquiera con el enlace entra, y todas las acciones quedan a nombre de `OPEN_MODE_USER` (por defecto `qa@think4ever.com`).
-  - La interfaz muestra "Sin login (QA)" y el registro lo avisa al arrancar.
-  - Como hay un solo usuario, pon también `REQUIRE_DISTINCT_APPROVER=0`; si no, nadie puede aprobar lo que editó.
-  - Esto va en contra de la regla de T4E de que toda herramienta interna pide autenticación. Úsalo solo en QA y no compartas el enlace fuera del equipo.
-  - Para volver al login, quita `AUTH_MODE` y define las variables `AZURE_*` y `SESSION_SECRET`. El código de Microsoft no se tocó.
+- Cualquiera con el enlace entra. Todas las acciones quedan a nombre de `qa@think4ever.com`, y la interfaz muestra "Sin login (QA)".
+- Como hay un solo usuario, la regla "quien edita no aprueba" viene apagada (`REQUIRE_DISTINCT_APPROVER`, por defecto 0).
+- Esto va en contra de la regla de T4E de que toda herramienta interna pide autenticación. No compartas el enlace fuera del equipo.
+- **Para restaurar el login:** recupera del commit `4ff4141` `lib/auth.js`, `server.js`, `public/login.html` y las dependencias de `package.json`, y vuelve a poner `REQUIRE_DISTINCT_APPROVER` en 1 por defecto.
 - **Diagnóstico al arrancar:** el registro muestra qué variables faltan, solo por nombre y nunca con su valor. Si a Reddit o a GitHub les faltan credenciales, se omiten y la corrida sigue con las demás.
 
 ## Configuración editable sin tocar código
@@ -107,7 +99,6 @@ Usa el mismo sistema de diseño del tablero LATAM Growth (`latam_growth/public/c
 
 - Los botones que el servidor rechazaría aparecen desactivados y dicen por qué. Por ejemplo, Aprobar se desactiva si la revisión automática tiene errores o si tú editaste el borrador. El servidor sigue aplicando las reglas.
 - Antes de salir de un borrador con cambios sin guardar, la interfaz pide confirmación.
-- `css/app.css` es la única ruta abierta sin sesión además de `login.html`, porque la usa la página de acceso. No trae datos.
 
 ## Datos
 
@@ -118,7 +109,7 @@ Usa el mismo sistema de diseño del tablero LATAM Growth (`latam_growth/public/c
 ## Pendientes
 
 - **Subreddits:** confirmar `config/sources.json` contra los 24 subreddits que mapeó Research, y marcar los que prohíben autopromoción.
-- **Credenciales:** app de Reddit de solo lectura en la cuenta de la marca, token de GitHub, clave de Anthropic y app de Microsoft (redirect URI del servicio).
+- **Credenciales:** app de Reddit de solo lectura en la cuenta de la marca, token de GitHub, clave de Anthropic y app de OAuth de Microsoft para volver a pedir login.
 - **Dirección:** respuesta oficial sobre dónde quedan el código y los datos del usuario.
 - **Equipo web:** `github` como `utm_source` en el Diccionario.
 - **Publicidad:** fecha en que Reddit pasa a fase con enlaces (`LINKS_ENABLED=1`).

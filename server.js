@@ -13,24 +13,8 @@ if (!PORT) {
   process.exit(1);
 }
 
-// Toda herramienta interna lleva autenticación: sin la configuración de Microsoft, no arranca.
-const missingAuth = auth.missingAuthSettings();
-if (missingAuth.length) {
-  console.error(`Falta configuración de acceso: ${missingAuth.join(', ')}. El servicio no arranca sin autenticación.`);
-  process.exit(1);
-}
-const localDev = auth.localDev();
-// El modo local entra sin login: nunca se permite donde el runtime inyecta BASE_PATH (el servicio real),
-// porque el proxy podría llegar por 127.0.0.1 y la herramienta quedaría abierta.
-if (localDev && String(process.env.BASE_PATH || '').trim()) {
-  console.error('AUTH_MODE=local-dev no se permite en el servicio. Quítalo de las variables del servicio.');
-  process.exit(1);
-}
-const HOST = localDev ? '127.0.0.1' : undefined;
-if (auth.openMode()) {
-  console.warn('AVISO: AUTH_MODE=open. El servicio está SIN LOGIN (fase de QA): cualquiera con el enlace entra. '
-    + 'Quita AUTH_MODE y define AZURE_* en cuanto exista la app de Microsoft.');
-}
+// SIN LOGIN hasta nuevo aviso (fase de QA): ver lib/auth.js para restaurar el inicio de sesión con Microsoft.
+console.warn('AVISO: el servicio está SIN LOGIN (fase de QA): cualquiera con el enlace entra.');
 
 // Diagnóstico seguro al arrancar: solo nombres de variables, nunca sus valores.
 const OPTIONAL = {
@@ -59,7 +43,7 @@ app.use(express.json({ limit: '64kb' }));
 
 app.get(['/health', '/api/health'], (req, res) => res.json({ status: 'ok' }));
 
-auth.mount(app); // de aquí en adelante todo pide sesión
+auth.mount(app); // sin login por ahora: asigna el usuario de QA a cada petición
 app.use(require('./routes/api'));
 app.use(express.static(path.join(__dirname, 'public'), {
   redirect: false,
@@ -77,8 +61,8 @@ app.use((err, req, res, next) => {
   } else {
     console.warn('Sin base de datos: la cola y la corrida diaria no funcionan (solo pruebas locales).');
   }
-  app.listen(PORT, HOST, () => {
-    console.log(`Agente de escucha en el puerto ${PORT}${localDev ? ' (local-dev, solo 127.0.0.1)' : auth.openMode() ? ' (SIN LOGIN: AUTH_MODE=open)' : ''}`);
+  app.listen(PORT, () => {
+    console.log(`Agente de escucha en el puerto ${PORT} (sin login)`);
     if (hasDb()) startScheduler();
   });
 })().catch((e) => {

@@ -15,17 +15,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.7.0",
-    "@azure/msal-node": "^7.2.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-mysql-session": "^3.0.3",
-    "express-session": "^1.19.0",
     "mysql2": "^3.24.6"
-  },
-  "overrides": {
-    "express-mysql-session": {
-      "mysql2": "$mysql2"
-    }
   },
   "engines": {
     "node": ">=20"
