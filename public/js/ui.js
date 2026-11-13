@@ -26,7 +26,7 @@
   };
 
   // ---------- fuentes
-  const SRC = U.SRC = { reddit: 'Reddit', hn: 'Hacker News', github: 'GitHub' };
+  const SRC = U.SRC = { stackexchange: 'Stack Exchange', hn: 'Hacker News', github: 'GitHub' };
   U.source = (key, community) => `<span class="src-dot src-${esc(key)}" aria-hidden="true"></span><span class="community">${esc(SRC[key] || key)}${community ? ` · ${esc(community)}` : ''}</span>`;
   U.score = (n) => (n == null ? '' : `<span class="score ${n >= 75 ? 'hi' : n >= 50 ? 'mid' : ''}" title="Relevancia según el agente">${esc(n)}</span>`);
   U.persona = (p) => (p ? esc(String(p).split('-')[0]) : '');

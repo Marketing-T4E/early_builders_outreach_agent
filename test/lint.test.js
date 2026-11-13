@@ -39,7 +39,7 @@ test('fase sin enlaces bloquea URL', () => {
 });
 
 test('con enlaces activos, el enlace propio necesita UTM; el dominio no cuenta como marca mal escrita', () => {
-  const link = 'https://go.think4ever.com/developer-network-co?utm_source=reddit&utm_medium=community&utm_campaign=developer_network_co_202611&utm_content=claudeai';
+  const link = 'https://go.think4ever.com/developer-network-co?utm_source=stackexchange&utm_medium=community&utm_campaign=developer_network_co_202611&utm_content=stackoverflow';
   const ok = lintReply(`Docs here: ${link} (I work at Think4Ever).`, { linksEnabled: true, linkUrl: link });
   assert.equal(ok.ok, true, JSON.stringify(ok.issues));
   const bad = lintReply('Docs: https://think4ever.com/docs (I work at Think4Ever).', { linksEnabled: true, linkUrl: link });

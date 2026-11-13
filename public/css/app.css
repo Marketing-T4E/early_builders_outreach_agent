@@ -16,7 +16,7 @@
   --grad-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
   --font-body: 'Inter', system-ui, sans-serif; --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   /* Color fijo por fuente: igual en la lista, el detalle y el resumen */
-  --src-reddit: #f97316; --src-hn: #22d3ee; --src-github: #a5a8ff;
+  --src-stackexchange: #f97316; --src-hn: #22d3ee; --src-github: #a5a8ff;
   --page-pad: 28px; --gap: 16px;
   color-scheme: dark;
 }
@@ -257,7 +257,7 @@ tr.sel td { background: var(--color-primary-soft); }
 
 /* Fuente */
 .src-dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; flex: 0 0 8px; background: var(--src, var(--color-text-muted)); }
-.src-reddit { --src: var(--src-reddit); } .src-hn { --src: var(--src-hn); } .src-github { --src: var(--src-github); }
+.src-stackexchange { --src: var(--src-stackexchange); } .src-hn { --src: var(--src-hn); } .src-github { --src: var(--src-github); }
 
 /* Cola: lista a la izquierda, detalle a la derecha */
 .queue-layout { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: var(--gap); align-items: start; }

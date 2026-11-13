@@ -1,35 +1,45 @@
 {
-  "_nota": "Lista inicial. POR CONFIRMAR contra los 24 subreddits mapeados por Research (plan de alcance, 2026-11-05). Se edita aquí, sin tocar código.",
-  "reddit": {
-    "subreddits": [
-      "ClaudeAI",
-      "ClaudeCode",
-      "cursor",
-      "ChatGPTCoding",
-      "vibecoding",
-      "mcp",
-      "LLMDevs",
-      "AI_Agents",
-      "lovable",
-      "replit",
-      "SoftwareEngineering",
-      "ExperiencedDevs",
-      "webdev",
-      "programacion",
-      "devsarg"
-    ],
-    "search_phrases": [
-      "claude code loses context",
-      "AI generated code production ready",
-      "vibe coded app security",
-      "keep documentation in sync AI",
-      "MCP server project context",
-      "código generado por IA producción"
-    ],
+  "_nota": "Lista inicial. POR CONFIRMAR con Research: sitios y etiquetas de Stack Exchange (reemplaza a Reddit, sin aprobación de su API, 2026-11-13). Se edita aquí, sin tocar código.",
+  "stackexchange": {
+    "sites": {
+      "stackoverflow": {
+        "tags": [
+          "claude-code",
+          "cursor-ide",
+          "github-copilot",
+          "model-context-protocol",
+          "large-language-model",
+          "openai-api"
+        ],
+        "search_phrases": [
+          "AI generated code production",
+          "claude code context",
+          "keep documentation in sync"
+        ]
+      },
+      "es.stackoverflow": {
+        "tags": [
+          "inteligencia-artificial"
+        ],
+        "search_phrases": [
+          "código generado por IA",
+          "claude code",
+          "cursor"
+        ]
+      },
+      "softwareengineering": {
+        "tags": [],
+        "search_phrases": [
+          "AI generated code",
+          "living documentation",
+          "technical debt AI"
+        ]
+      }
+    },
     "no_self_promo": [
-      "ExperiencedDevs",
-      "SoftwareEngineering",
-      "webdev"
+      "stackoverflow",
+      "es.stackoverflow",
+      "softwareengineering"
     ]
   },
   "hn": {

@@ -1,6 +1,8 @@
 # early_builders_outreach_agent
 
-Es el agente de escucha. Busca a diario en Reddit, Hacker News y GitHub Discussions hilos donde alguien pregunta por algo que Think4Ever resuelve, redacta la respuesta y la deja en cola. Publica una persona. Sirve de insumo para las tasks de Reddit y de contenido.
+Es el agente de escucha. Busca a diario en Stack Exchange (Stack Overflow, es.stackoverflow y Software Engineering), Hacker News y GitHub Discussions hilos donde alguien pregunta por algo que Think4Ever resuelve, redacta la respuesta y la deja en cola. Publica una persona. Sirve de insumo para las tasks de comunidades y de contenido.
+
+> **2026-11-13:** Reddit no aprobó el acceso a su API. Stack Exchange la reemplaza como fuente; el código de Reddit queda en el historial de Git (commit `4e586f4`) por si se aprueba más adelante.
 
 - **Task del Hub:** #212, escucha de comunidades (ver `02-estrategia/plan-alcance-comunidades-developer-network.md` en la KB).
 - **Alimenta:** #229 (Reddit) y #231 (contenido técnico), con el reporte semanal.
@@ -9,13 +11,13 @@ Es el agente de escucha. Busca a diario en Reddit, Hacker News y GitHub Discussi
 ## Cómo funciona
 
 ```
-Reddit · HN · GitHub  →  filtro previo (sin costo)  →  Claude: ¿es relevante? + borrador  →  revisión automática
+Stack Exchange · HN · GitHub  →  filtro previo (sin costo)  →  Claude: ¿es relevante? + borrador  →  revisión automática
                                                                                                    ↓
                          reporte semanal  ←  publicado (URL)  ←  persona publica  ←  aprobado  ←  cola
 ```
 
 1. **Búsqueda diaria** (por defecto a las 6 a. m. de Bogotá, dentro del servicio) de las últimas 36 horas:
-   - **Reddit:** lo nuevo de cada subreddit configurado, más búsquedas globales. Solo lectura, con OAuth de aplicación.
+   - **Stack Exchange:** preguntas nuevas por etiqueta y por frase en cada sitio configurado, por la API pública 2.3. Omite las preguntas cerradas o bloqueadas. Solo lectura.
    - **Hacker News:** historias y comentarios, por la API pública de Algolia.
    - **GitHub Discussions:** búsqueda por GraphQL. Omite las discusiones ya respondidas o cerradas.
 2. **Filtro previo** por temas y señales de pregunta, en español y en inglés (`config/sources.json`). Decide qué pasa a Claude y controla el costo (`MAX_LLM_PER_RUN`).
@@ -36,9 +38,9 @@ Reddit · HN · GitHub  →  filtro previo (sin costo)  →  Claude: ¿es releva
 
 ## Enlaces y UTM
 
-- **Arranque sin enlaces** (`LINKS_ENABLED=0`): Reddit va 2 a 3 semanas sin enlaces al inicio (decisión del 2026-10-16).
-- **Con enlaces activos:** un solo enlace al destino `LINK_DESTINATION`, con `utm_source` igual a `reddit`, `hn` o `github`, `utm_medium=community`, `utm_campaign=developer_network_co_202611` y `utm_content` igual a la comunidad (minúsculas y guion bajo).
-- **Por confirmar:** `github` como `utm_source` en el Diccionario del plan de UTM. El plan de alcance lista `reddit` y `hn`, pero no `github`.
+- **Arranque sin enlaces** (`LINKS_ENABLED=0`): 2 a 3 semanas sin enlaces al inicio (decisión del 2026-10-16, tomada para Reddit; se mantiene para las demás fuentes).
+- **Con enlaces activos:** un solo enlace al destino `LINK_DESTINATION`, con `utm_source` igual a `stackexchange`, `hn` o `github`, `utm_medium=community`, `utm_campaign=developer_network_co_202611` y `utm_content` igual a la comunidad (minúsculas y guion bajo).
+- **Por confirmar:** `stackexchange` y `github` como `utm_source` en el Diccionario del plan de UTM. El plan de alcance lista `reddit` y `hn`, pero no estos dos.
 
 ## Puesta en marcha
 
@@ -64,7 +66,7 @@ Las variables están en `.env.example`, con los mismos nombres que el tablero do
 | Variable | Para qué |
 |---|---|
 | `ANTHROPIC_API_KEY` | Clasificar y redactar. Solo se usa Anthropic: la dirección de la API va fija en el código (se ignora `ANTHROPIC_BASE_URL`) y `ANTHROPIC_MODEL` solo acepta modelos Claude |
-| `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_USER_AGENT` | App tipo *script* de la cuenta de la marca (u/IMT4E), solo lectura. Requiere aprobación de Reddit |
+| `STACKEXCHANGE_KEY` | Opcional. Clave de app de stackapps.com (registro inmediato, sin revisión): sube la cuota de 300 a 10.000 consultas al día |
 | `GITHUB_TOKEN` | Token *fine-grained* con "Public repositories (read-only)" |
 
 ### Acceso
@@ -75,14 +77,14 @@ Las variables están en `.env.example`, con los mismos nombres que el tablero do
 - Como hay un solo usuario, la regla "quien edita no aprueba" viene apagada (`REQUIRE_DISTINCT_APPROVER`, por defecto 0).
 - Esto va en contra de la regla de T4E de que toda herramienta interna pide autenticación. No compartas el enlace fuera del equipo.
 - **Para restaurar el login:** recupera del commit `4ff4141` `lib/auth.js`, `server.js`, `public/login.html` y las dependencias de `package.json`, y vuelve a poner `REQUIRE_DISTINCT_APPROVER` en 1 por defecto.
-- **Diagnóstico al arrancar:** el registro muestra qué variables faltan, solo por nombre y nunca con su valor. Si a Reddit o a GitHub les faltan credenciales, se omiten y la corrida sigue con las demás.
+- **Diagnóstico al arrancar:** el registro muestra qué variables faltan, solo por nombre y nunca con su valor. Si a GitHub le falta el token, se omiten y la corrida sigue con las demás.
 
 ## Configuración editable sin tocar código
 
 `config/sources.json`:
 
-- subreddits, frases de búsqueda, consultas de HN y de GitHub, y repos específicos;
-- subreddits donde no se menciona la marca (`no_self_promo`); ahí la respuesta es solo ayuda;
+- sitios de Stack Exchange con sus etiquetas y frases, consultas de HN y de GitHub, y repos específicos;
+- comunidades donde no se menciona la marca (`no_self_promo`); ahí la respuesta es solo ayuda. Por defecto están todos los sitios de Stack Exchange, cuyas reglas no admiten respuestas promocionales;
 - temas, pesos, señales de pregunta, exclusiones y puntaje mínimo del filtro.
 
 ## Interfaz
@@ -108,8 +110,8 @@ Usa el mismo sistema de diseño del tablero LATAM Growth (`latam_growth/public/c
 
 ## Pendientes
 
-- **Subreddits:** confirmar `config/sources.json` contra los 24 subreddits que mapeó Research, y marcar los que prohíben autopromoción.
-- **Credenciales:** app de Reddit de solo lectura en la cuenta de la marca, token de GitHub, clave de Anthropic y app de OAuth de Microsoft para volver a pedir login.
+- **Stack Exchange:** confirmar con Research los sitios y etiquetas de `config/sources.json`.
+- **Credenciales:** token de GitHub, clave opcional de Stack Exchange, clave de Anthropic y app de OAuth de Microsoft para volver a pedir login.
 - **Dirección:** respuesta oficial sobre dónde quedan el código y los datos del usuario.
-- **Equipo web:** `github` como `utm_source` en el Diccionario.
-- **Publicidad:** fecha en que Reddit pasa a fase con enlaces (`LINKS_ENABLED=1`).
+- **Equipo web:** `stackexchange` y `github` como `utm_source` en el Diccionario.
+- **Publicidad:** fecha en que se pasa a fase con enlaces (`LINKS_ENABLED=1`).

@@ -45,7 +45,7 @@ router.get('/api/me', wrap(async (req, res) => {
 
 router.get('/api/queue', wrap(async (req, res) => {
   const status = store.QUEUE_STATUSES.includes(req.query.status) ? req.query.status : 'en_cola';
-  const source = ['reddit', 'hn', 'github'].includes(req.query.source) ? req.query.source : null;
+  const source = ['stackexchange', 'hn', 'github'].includes(req.query.source) ? req.query.source : null;
   res.json({ items: await store.listQueue({ status, source, limit: req.query.limit }), counts: await store.counts() });
 }));
 

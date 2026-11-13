@@ -13,7 +13,7 @@
     error: { title: 'Errores', sub: 'Hilos que fallaron al clasificar o redactar. El motivo está en el detalle.', empty: 'Sin errores.' },
   };
   const STATUS_PILL = { en_cola: ['info', 'En cola'], aprobado: ['success', 'Aprobado'], publicado: ['success', 'Publicado'], descartado: ['neutral', 'Descartado'], no_relevante: ['neutral', 'No relevante'], error: ['error', 'Error'], pendiente: ['warning', 'Pendiente'] };
-  const POSTED_HOSTS = { reddit: /(^|\.)reddit\.com$/, hn: /^news\.ycombinator\.com$/, github: /^github\.com$/ };
+  const POSTED_HOSTS = { stackexchange: /(^|\.)(stackoverflow|stackexchange)\.com$/, hn: /^news\.ycombinator\.com$/, github: /^github\.com$/ };
   const ACTIONS = { redactado: 'El agente redactó el borrador', editado: 'editó el borrador', aprobado: 'aprobó', publicado: 'registró la publicación', descartado: 'descartó', error: 'error del agente' };
 
   const Q = { status: 'en_cola', items: null, sel: null, detail: null, detailLoading: false, error: '', draft: null };

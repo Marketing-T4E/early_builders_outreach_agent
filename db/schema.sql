@@ -3,10 +3,10 @@
 
 CREATE TABLE IF NOT EXISTS threads (
   id                INT AUTO_INCREMENT PRIMARY KEY,
-  source            VARCHAR(16)  NOT NULL,            -- reddit | hn | github
+  source            VARCHAR(16)  NOT NULL,            -- stackexchange | hn | github
   external_id       VARCHAR(128) NOT NULL,
   url               VARCHAR(512) NOT NULL,
-  community         VARCHAR(128) NOT NULL,            -- subreddit, "hn" o repositorio
+  community         VARCHAR(128) NOT NULL,            -- sitio de Stack Exchange, "hn" o repositorio
   title             VARCHAR(512) NOT NULL,
   excerpt           TEXT,
   thread_created_at DATETIME     NULL,

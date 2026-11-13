@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const reddit = require('../lib/sources/reddit');
+const stackexchange = require('../lib/sources/stackexchange');
 const hn = require('../lib/sources/hn');
 const github = require('../lib/sources/github');
 const { requireAuth, authMode, QA_USER } = require('../lib/auth');
@@ -10,12 +10,27 @@ const { buildReport } = require('../lib/report');
 const { clampResult } = require('../lib/drafter');
 const { OUTPUT_SCHEMA } = require('../lib/brief');
 
-test('normaliza un post de Reddit sin autor', () => {
-  const n = reddit.normalize({ data: { name: 't3_abc', id: 'abc', permalink: '/r/ClaudeAI/comments/abc/x/', subreddit: 'ClaudeAI',
-    title: 'T', selftext: 'B', created_utc: 1762700000, author: 'someone' } });
-  assert.equal(n.url, 'https://www.reddit.com/r/ClaudeAI/comments/abc/x/');
-  assert.equal(n.community, 'ClaudeAI');
-  assert.equal('author' in n, false);
+test('normaliza una pregunta de Stack Exchange sin autor', () => {
+  const n = stackexchange.normalize({ question_id: 42, link: 'https://es.stackoverflow.com/questions/42/x',
+    title: '¿C&#243;mo evito que &quot;Claude&quot; pierda el contexto?', body: '<p>Uso Claude Code &amp; MCP</p>',
+    creation_date: 1762700000, tags: ['claude-code'], owner: { display_name: 'someone' } }, 'es.stackoverflow');
+  assert.equal(n.source, 'stackexchange');
+  assert.equal(n.external_id, 'es.stackoverflow:42');
+  assert.equal(n.community, 'es.stackoverflow');
+  assert.equal(n.title, '¿Cómo evito que "Claude" pierda el contexto?');
+  assert.equal(n.body, 'Uso Claude Code & MCP');
+  assert.equal(n.meta.closed, false);
+  assert.equal('author' in n || 'owner' in n, false);
+});
+
+test('Stack Exchange: una consulta por etiqueta y por frase, con la clave solo si existe', () => {
+  const cfg = { sites: { stackoverflow: { tags: ['claude-code', 'cursor-ide'], search_phrases: ['ai code'] }, 'es.stackoverflow': { search_phrases: ['código IA'] } } };
+  const reqs = stackexchange.buildRequests(cfg, 1762700000, '');
+  assert.equal(reqs.length, 4);
+  assert.match(reqs[0].url, /\/questions\?site=stackoverflow&tagged=claude-code&.*fromdate=1762700000/);
+  assert.match(reqs[3].url, /\/search\/advanced\?site=es.stackoverflow&q=c%C3%B3digo%20IA/);
+  assert.ok(reqs.every((r) => !r.url.includes('key=')));
+  assert.ok(stackexchange.buildRequests(cfg, 1, 'abc').every((r) => r.url.includes('&key=abc')));
 });
 
 test('normaliza un comentario de HN', () => {
@@ -63,11 +78,11 @@ test('esquema estricto: todas las propiedades requeridas', () => {
 
 test('reporte en Markdown', () => {
   const md = buildReport([
-    { source: 'reddit', community: 'ClaudeAI', url: 'https://r', title: 'T', status: 'publicado', relevance_score: 90,
+    { source: 'stackexchange', community: 'stackoverflow', url: 'https://r', title: 'T', status: 'publicado', relevance_score: 90,
       theme: 'hardening', persona: 'p01-desarrolladores', question_summary: 'Cómo endurecer', content_idea: 'Tutorial X',
-      posted_url: 'https://www.reddit.com/r/x/1', posted_at: '2026-11-09 12:00:00' },
+      posted_url: 'https://stackoverflow.com/a/1', posted_at: '2026-11-09 12:00:00' },
   ], { days: 7, today: '2026-11-09' });
   assert.match(md, /Publicados:\*\* 1/);
   assert.match(md, /Tutorial X/);
-  assert.match(md, /reddit · ClaudeAI/);
+  assert.match(md, /stackexchange · stackoverflow/);
 });

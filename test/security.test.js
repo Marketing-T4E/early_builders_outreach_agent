@@ -6,18 +6,23 @@ const { validatePostedUrl, versionOf, RuleError } = require('../lib/store');
 const { isSystemicError } = require('../lib/drafter');
 
 test('URL publicada: solo https del sitio del hilo', () => {
-  assert.equal(validatePostedUrl('reddit', 'https://www.reddit.com/r/ClaudeAI/comments/abc/x/def/'),
-    'https://www.reddit.com/r/ClaudeAI/comments/abc/x/def/');
+  assert.equal(validatePostedUrl('stackexchange', 'https://stackoverflow.com/questions/1/x/2#2'),
+    'https://stackoverflow.com/questions/1/x/2#2');
+  assert.equal(validatePostedUrl('stackexchange', 'https://es.stackoverflow.com/a/3'), 'https://es.stackoverflow.com/a/3');
+  assert.equal(validatePostedUrl('stackexchange', 'https://softwareengineering.stackexchange.com/a/4'),
+    'https://softwareengineering.stackexchange.com/a/4');
   assert.equal(validatePostedUrl('hn', ' https://news.ycombinator.com/item?id=1 '), 'https://news.ycombinator.com/item?id=1');
   const bad = [
-    ['reddit', 'javascript://www.reddit.com/%0aalert(1)'],
-    ['reddit', 'http://www.reddit.com/r/x'],
-    ['reddit', 'https://evilreddit.com/r/x'],
-    ['reddit', 'https://user:pw@www.reddit.com/r/x'],
+    ['stackexchange', 'javascript://stackoverflow.com/%0aalert(1)'],
+    ['stackexchange', 'http://stackoverflow.com/a/1'],
+    ['stackexchange', 'https://evilstackoverflow.com/a/1'],
+    ['stackexchange', 'https://stackoverflow.com.evil.io/a/1'],
+    ['stackexchange', 'https://user:pw@stackoverflow.com/a/1'],
+    ['reddit', 'https://www.reddit.com/r/x'],
     ['github', 'https://gist.github.com/x'],
     ['hn', 'https://news.ycombinator.com.evil.io/item?id=1'],
     ['hn', 'no es una url'],
-    ['otra', 'https://www.reddit.com/r/x'],
+    ['otra', 'https://stackoverflow.com/a/1'],
   ];
   for (const [src, url] of bad) {
     assert.throws(() => validatePostedUrl(src, url), RuleError, `${src} ${url}`);

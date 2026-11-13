@@ -1,7 +1,7 @@
 {
   "name": "early-builders-outreach-agent",
   "version": "0.1.0",
-  "description": "Agente de escucha de Think4Ever: encuentra hilos en Reddit, Hacker News y GitHub Discussions, redacta la respuesta y la deja en cola. Publica una persona.",
+  "description": "Agente de escucha de Think4Ever: encuentra hilos en Stack Exchange, Hacker News y GitHub Discussions, redacta la respuesta y la deja en cola. Publica una persona.",
   "main": "server.js",
   "private": true,
   "scripts": {

@@ -19,7 +19,6 @@ console.warn('AVISO: el servicio está SIN LOGIN (fase de QA): cualquiera con el
 // Diagnóstico seguro al arrancar: solo nombres de variables, nunca sus valores.
 const OPTIONAL = {
   'redacción con Claude': ['ANTHROPIC_API_KEY'],
-  'fuente Reddit': ['REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET', 'REDDIT_USER_AGENT'],
   'fuente GitHub': ['GITHUB_TOKEN'],
 };
 for (const [what, names] of Object.entries(OPTIONAL)) {

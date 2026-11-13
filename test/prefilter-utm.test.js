@@ -5,7 +5,7 @@ const { prefilter, makeMatcher } = require('../lib/prefilter');
 const { buildLink, slug } = require('../lib/utm');
 const sources = require('../config/sources.json');
 
-const item = (title, body = '') => ({ source: 'reddit', external_id: title, url: 'u', community: 'x', title, body });
+const item = (title, body = '') => ({ source: 'stackexchange', external_id: title, url: 'u', community: 'x', title, body });
 
 test('pregunta sobre pérdida de contexto pasa el filtro', () => {
   const out = prefilter([item('Claude Code loses context every session, how do you handle it?')], sources.prefilter);
@@ -40,13 +40,13 @@ test('coincidencia por palabra completa', () => {
 
 test('UTM según la convención', () => {
   const link = buildLink({
-    destination: 'https://go.think4ever.com/developer-network-co', channel: 'reddit',
-    campaign: 'developer_network_co_202611', community: 'ClaudeAI',
+    destination: 'https://go.think4ever.com/developer-network-co', channel: 'stackexchange',
+    campaign: 'developer_network_co_202611', community: 'es.stackoverflow',
   });
   const u = new URL(link);
-  assert.equal(u.searchParams.get('utm_source'), 'reddit');
+  assert.equal(u.searchParams.get('utm_source'), 'stackexchange');
   assert.equal(u.searchParams.get('utm_medium'), 'community');
   assert.equal(u.searchParams.get('utm_campaign'), 'developer_network_co_202611');
-  assert.equal(u.searchParams.get('utm_content'), 'claudeai');
+  assert.equal(u.searchParams.get('utm_content'), 'es_stackoverflow');
   assert.equal(slug('anthropics/claude-code Ñandú'), 'anthropics_claude_code_nandu');
 });
